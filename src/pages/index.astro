@@ -427,6 +427,9 @@ import Layout from "../layouts/Layout.astro";
       var dir = next > prev ? 1 : -1;
       current = next;
 
+      // Lock experience section scroll during transition to prevent momentum bleed
+      if (next === 2) expSection.style.overflowY = 'hidden';
+
       setTrans(sections[prev], DURATION);
       if (dir === 1) {
         sections[prev].style.transform = 'scale(0.92) translateY(-3%)';
@@ -456,7 +459,7 @@ import Layout from "../layouts/Layout.astro";
 
           // Trigger entering section's content reveals
           if (next === 1) triggerMissionReveals();
-          if (next === 2) triggerExpReveals();
+          if (next === 2) { triggerExpReveals(); topMomentumCooldown = false; }
 
           updateDots(next);
 
@@ -464,7 +467,12 @@ import Layout from "../layouts/Layout.astro";
           setTimeout(function() {
             if (prev === 1) resetMissionReveals();
             if (prev === 2) resetExpReveals();
+            // Restore experience scroll and add a short cooldown to swallow tail momentum
+            if (next === 2) expSection.style.overflowY = 'auto';
             busy = false;
+            wheelAcc = 0;
+            cooldown = true;
+            setTimeout(function() { cooldown = false; }, 350);
           }, DURATION + 100);
         });
       });
@@ -474,9 +482,26 @@ import Layout from "../layouts/Layout.astro";
     resetMissionReveals();
     resetExpReveals();
 
+    // ─── Cooldown after momentum carries expSection to scrollTop=0 ───
+    var topMomentumCooldown = false;
+    var topMomentumTimer = null;
+    expSection.addEventListener('scroll', function() {
+      if (expSection.scrollTop > 0) {
+        // mid-scroll: clear any lingering cooldown so a fresh stop-at-top arms it fresh
+        clearTimeout(topMomentumTimer);
+        topMomentumCooldown = false;
+      } else {
+        // just hit the top — arm cooldown to swallow momentum tail
+        topMomentumCooldown = true;
+        clearTimeout(topMomentumTimer);
+        topMomentumTimer = setTimeout(function() { topMomentumCooldown = false; }, 450);
+      }
+    });
+
     // ─── Wheel handler with scroll-unlock for experience section ───
     var wheelAcc = 0;
     var wheelTimer = null;
+    var cooldown = false;
     window.addEventListener('wheel', function(e) {
       if (current === 2) {
         var el = expSection;
@@ -491,13 +516,14 @@ import Layout from "../layouts/Layout.astro";
         // Scrolling up
         if (!atTop) return; // still mid-content, let it scroll naturally
 
-        // At top — exit immediately
+        // At top — only exit if not in momentum cooldown
         e.preventDefault();
-        goTo(current - 1);
+        if (!topMomentumCooldown) goTo(current - 1);
         return;
       }
 
       e.preventDefault();
+      if (cooldown) return; // swallow tail momentum after a transition
       wheelAcc += e.deltaY;
       if (wheelTimer) clearTimeout(wheelTimer);
       wheelTimer = setTimeout(function() { wheelAcc = 0; }, 200);
