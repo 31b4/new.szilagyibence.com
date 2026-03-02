@@ -45,7 +45,9 @@ import Layout from "../layouts/Layout.astro";
 
     <!-- ═══════════════ HERO SECTION ═══════════════ -->
     <main class="relative z-10 flex-1 flex items-center justify-center px-8 md:px-16">
-      <div class="w-full max-w-5xl grid grid-cols-[1fr_auto_1fr] items-center gap-6 md:gap-10">
+
+      <!-- ── DESKTOP LAYOUT (lg+) ── kept exactly as-is ── -->
+      <div class="hidden lg:grid w-full max-w-5xl grid-cols-[1fr_auto_1fr] items-center gap-6 md:gap-10">
 
         <!-- Left text -->
         <div class="relative flex flex-col items-start justify-center text-left -translate-y-20">
@@ -63,15 +65,11 @@ import Layout from "../layouts/Layout.astro";
 
         <!-- Central Earth assembly -->
         <div class="relative flex items-center justify-center w-64 md:w-80 lg:w-96 xl:w-[28rem] aspect-square">
-
-          <!-- Real NASA Earth PNG (transparent, no clip needed) -->
           <img
             src="/earth.png"
             alt="Earth from space"
             class="w-full h-full object-contain"
           />
-
-
         </div>
 
         <!-- Right text -->
@@ -79,11 +77,49 @@ import Layout from "../layouts/Layout.astro";
           <!-- Neptune floating above Building Health -->
           <img
             src="/neptune.png"
-            alt="International Space Station"
+            alt="Neptune"
             class="absolute w-16 md:w-20 lg:w-24 xl:w-28 object-contain"
             style="top: -5.2rem; right: -0.5rem; z-index: 20;"
           />
           <h1 class="relative z-10 text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
+            Building<br />Health
+          </h1>
+        </div>
+      </div>
+
+      <!-- ── MOBILE LAYOUT (<lg) ── -->
+      <div class="lg:hidden relative w-full flex items-center justify-center" style="min-height: 70vh;">
+        <!-- Earth centered -->
+        <div class="relative w-56 sm:w-72 md:w-80 aspect-square">
+          <img
+            src="/earth.png"
+            alt="Earth from space"
+            class="w-full h-full object-contain"
+          />
+        </div>
+
+        <!-- Szilagyi Bence — top-left -->
+        <div class="absolute top-0 left-0 flex flex-col items-start">
+          <h1 class="relative z-10 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
+            Szilagyi<br />Bence
+          </h1>
+          <img
+            src="/moon.png"
+            alt="Moon"
+            class="absolute w-14 sm:w-16 md:w-20 aspect-square object-cover"
+            style="border-radius: 50%; bottom: -3.5rem; left: 0.5rem; z-index: 20;"
+          />
+        </div>
+
+        <!-- Building Health — bottom-right -->
+        <div class="absolute bottom-0 right-0 flex flex-col items-end text-right">
+          <img
+            src="/neptune.png"
+            alt="Neptune"
+            class="absolute w-14 sm:w-16 md:w-20 object-contain"
+            style="top: -3.5rem; right: 0rem; z-index: 20;"
+          />
+          <h1 class="relative z-10 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
             Building<br />Health
           </h1>
         </div>
