@@ -19,7 +19,7 @@ import ContactSection from "../components/ContactSection.astro";
     <MissionSection />
 
     <!-- SECTION 2: SCROLL (Projects + Work + Contact) -->
-    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(var(--app-vh, 100dvh)); opacity: 0; overflow-y: auto; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
+    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(var(--app-vh, 100dvh)); opacity: 0; overflow-y: hidden; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
       <ProjectsSection />
       <WorkSection />
       <ContactSection />
@@ -401,11 +401,6 @@ import ContactSection from "../components/ContactSection.astro";
     .proj-phone { opacity: 0; transform: translateY(60px) scale(0.92); }
     .c-reveal { opacity: 0; transform: translateY(36px); }
     #scroll-hint { transition: opacity 0.5s ease; }
-    #s-scroll-content {
-      box-sizing: border-box;
-      padding-bottom: 24px;
-      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-    }
     /* Hide native scrollbar on merged scroll section */
     #s-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
     #s-scroll::-webkit-scrollbar { display: none; }
