@@ -69,8 +69,14 @@
   .section-dot { transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease; }
   .site-header,
   .site-footer {
-    transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease;
+    transition: opacity 0.45s ease, background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease;
     background: transparent;
+  }
+  .site-header {
+    top: max(0.25rem, env(safe-area-inset-top));
+  }
+  .site-footer {
+    bottom: max(0.25rem, env(safe-area-inset-bottom));
   }
   .site-header > a,
   .site-header > nav,

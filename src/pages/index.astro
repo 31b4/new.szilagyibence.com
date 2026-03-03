@@ -13,13 +13,13 @@ import ContactSection from "../components/ContactSection.astro";
   <SiteHeader />
 
   <!-- FULLPAGE CONTAINER -->
-  <div id="fullpage" style="position: fixed; inset: 0; overflow: hidden;">
+  <div id="fullpage" style="position: fixed; top: 0; left: 0; right: 0; height: var(--app-vh, 100dvh); overflow: hidden;">
 
     <HeroSection />
     <MissionSection />
 
     <!-- SECTION 2: SCROLL (Projects + Work + Contact) -->
-    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(100vh); opacity: 0; overflow-y: hidden; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
+    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(var(--app-vh, 100dvh)); opacity: 0; overflow-y: auto; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
       <ProjectsSection />
       <WorkSection />
       <ContactSection />
@@ -29,6 +29,18 @@ import ContactSection from "../components/ContactSection.astro";
 
   <script>
     import Lenis from 'lenis';
+
+    function setAppViewportHeight() {
+      var nextHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--app-vh', nextHeight + 'px');
+    }
+    setAppViewportHeight();
+    window.addEventListener('resize', setAppViewportHeight);
+    window.addEventListener('orientationchange', setAppViewportHeight);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', setAppViewportHeight);
+      window.visualViewport.addEventListener('scroll', setAppViewportHeight);
+    }
 
     const sections = [
       document.getElementById('s-hero'),
@@ -89,8 +101,11 @@ import ContactSection from "../components/ContactSection.astro";
       }
       var onScrollSection = idx === 2;
       if (siteHeader) siteHeader.classList.toggle('glass-active', onScrollSection);
-      if (siteFooter) siteFooter.classList.toggle('glass-active', onScrollSection);
-      if (siteFooter) siteFooter.style.opacity = '1';
+      if (siteFooter) siteFooter.classList.remove('glass-active');
+      if (siteFooter) {
+        siteFooter.style.opacity = onScrollSection ? '0' : '1';
+        siteFooter.style.pointerEvents = onScrollSection ? 'none' : 'auto';
+      }
     }
 
     // ─── Mission reveals (fullpage section — keeps existing timed cascade) ───
@@ -211,7 +226,7 @@ import ContactSection from "../components/ContactSection.astro";
         sections[prev].style.opacity = '0';
         if (prev === 0) setParallax(-55, 55, true);
       } else {
-        sections[prev].style.transform = 'translateY(100vh)';
+        sections[prev].style.transform = 'translateY(var(--app-vh, 100dvh))';
         sections[prev].style.opacity = '0';
         if (next === 0) setParallax(-55, 55, false);
       }
@@ -386,6 +401,11 @@ import ContactSection from "../components/ContactSection.astro";
     .proj-phone { opacity: 0; transform: translateY(60px) scale(0.92); }
     .c-reveal { opacity: 0; transform: translateY(36px); }
     #scroll-hint { transition: opacity 0.5s ease; }
+    #s-scroll-content {
+      box-sizing: border-box;
+      padding-bottom: 24px;
+      padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    }
     /* Hide native scrollbar on merged scroll section */
     #s-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
     #s-scroll::-webkit-scrollbar { display: none; }

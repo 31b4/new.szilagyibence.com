@@ -13,7 +13,9 @@ const { title = "31b4 — Szilagyi Bence" } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content="DESIGNED STUDIO — Exquisite makes Moments better." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,5 +34,18 @@ const { title = "31b4 — Szilagyi Bence" } = Astro.props;
 <style is:global>
   html {
     scroll-behavior: smooth;
+  }
+  :root {
+    --app-vh: 100dvh;
+  }
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100dvh;
+    height: 100%;
+    background: #000;
+    overscroll-behavior: none;
   }
 </style>
