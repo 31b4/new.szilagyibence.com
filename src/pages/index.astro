@@ -34,8 +34,8 @@ import orthographImg from '../assets/orthograph.png';
       <a href="#" data-go="0" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Home</a>
       <a href="#" data-go="1" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Mission</a>
       <a href="#" data-go="2" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Projects</a>
-      <a href="#" data-go="3" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Work</a>
-      <a href="#" data-go="4" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Contact</a>
+      <a href="#" data-go="2" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Work</a>
+      <a href="#" data-go="2" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Contact</a>
     </nav>
   </header>
 
@@ -58,7 +58,7 @@ import orthographImg from '../assets/orthograph.png';
         </svg>
       </a>
     </div>
-    <a href="#" data-go="4" class="text-sm font-medium text-white/60 hover:text-white transition-colors">Contact me</a>
+    <a href="#" data-go="2" class="text-sm font-medium text-white/60 hover:text-white transition-colors">Contact me</a>
   </footer>
 
   <!-- SECTION DOTS (right side) -->
@@ -66,8 +66,6 @@ import orthographImg from '../assets/orthograph.png';
     <button class="section-dot w-2 h-2 rounded-full bg-white" data-go="0" aria-label="Hero"></button>
     <button class="section-dot w-2 h-2 rounded-full bg-white/30" data-go="1" aria-label="Mission"></button>
     <button class="section-dot w-2 h-2 rounded-full bg-white/30" data-go="2" aria-label="Projects"></button>
-    <button class="section-dot w-2 h-2 rounded-full bg-white/30" data-go="3" aria-label="Work"></button>
-    <button class="section-dot w-2 h-2 rounded-full bg-white/30" data-go="4" aria-label="Contact"></button>
   </div>
 
   <!-- Floating next-section arrow -->
@@ -179,9 +177,11 @@ import orthographImg from '../assets/orthograph.png';
 
     </section>
 
-    <!-- SECTION 2: PROJECTS -->
-    <section id="s-projects" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(100vh); opacity: 0; overflow-y: auto; background: radial-gradient(ellipse 120% 80% at 50% 10%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 45%, rgba(0,0,0,1) 85%);">
+    <!-- SECTION 2: SCROLL (Projects + Work + Contact) -->
+    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(100vh); opacity: 0; overflow-y: hidden; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
 
+      <!-- ── Projects ── -->
+      <div id="anchor-projects">
       <div class="relative z-10">
 
         <!-- Spacer for fixed header -->
@@ -392,11 +392,10 @@ import orthographImg from '../assets/orthograph.png';
         <div class="h-24"></div>
 
       </div>
-    </section>
+      </div><!-- /anchor-projects -->
 
-    <!-- SECTION 3: EXPERIENCE -->
-    <section id="s-experience" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(100vh); opacity: 0; overflow-y: auto; background: radial-gradient(circle farthest-corner at 50% 0%, rgba(6,12,32,1) 0%, rgba(3,6,18,1) 40%, rgba(0,0,0,1) 80%);">
-
+      <!-- ── Work ── -->
+      <div id="anchor-work">
       <div class="relative z-10 min-h-screen">
 
         <!-- Spacer for fixed header -->
@@ -524,17 +523,15 @@ import orthographImg from '../assets/orthograph.png';
         <div class="h-32"></div>
 
       </div>
-    </section>
+      </div><!-- /anchor-work -->
 
-    <!-- SECTION 4: CONTACT -->
-    <section id="s-contact" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(100vh); opacity: 0;">
-
-      <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(circle farthest-corner at 50% 50%, rgba(8,14,36,1) 0%, rgba(5,10,26,1) 40%, rgba(2,4,12,1) 75%, rgba(0,0,0,1) 100%);"></div>
+      <!-- ── Contact ── -->
+      <div id="anchor-contact" style="position: relative; min-height: 100vh;">
 
       <div class="absolute top-[18%] left-0 w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent"></div>
       <div class="absolute bottom-[18%] left-0 w-full h-px bg-gradient-to-r from-transparent via-white/8 to-transparent"></div>
 
-      <div class="relative z-10 w-full h-full flex items-center justify-center px-6 md:px-16">
+      <div class="relative z-10 w-full min-h-screen flex items-center justify-center px-6 md:px-16">
         <div class="max-w-3xl w-full">
 
           <div class="c-reveal flex items-center gap-4 mb-10 md:mb-14">
@@ -578,22 +575,32 @@ import orthographImg from '../assets/orthograph.png';
 
         </div>
       </div>
-    </section>
+      </div><!-- /anchor-contact -->
+    </div><!-- /s-scroll-content --></section>
 
   </div>
 
   <script>
+    import Lenis from 'lenis';
+
     const sections = [
       document.getElementById('s-hero'),
       document.getElementById('s-mission'),
-      document.getElementById('s-projects'),
-      document.getElementById('s-experience'),
-      document.getElementById('s-contact'),
+      document.getElementById('s-scroll'),
     ];
 
-    const scrollableSections = [2, 3];
-    const projSection = sections[2];
-    const expSection = sections[3];
+    const scrollableSections = [2];
+    const scrollSection = sections[2];
+
+    const lenis = new Lenis({
+      wrapper: scrollSection,
+      content: document.getElementById('s-scroll-content'),
+      smoothWheel: true,
+      duration: 1.4,
+      easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+    });
+    lenis.stop();
+    (function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); })(performance.now());
     const dots = document.querySelectorAll('.section-dot');
     const scrollHint = document.getElementById('scroll-hint');
     const floatNextBtn = document.getElementById('float-next-btn');
@@ -631,10 +638,10 @@ import orthographImg from '../assets/orthograph.png';
         floatNextBtn.style.opacity = isLast ? '0' : '';
         floatNextBtn.style.pointerEvents = isLast ? 'none' : '';
       }
-      // hide footer on scroll hint (experience already has enough bottom space)
       if (siteFooter) siteFooter.style.opacity = '1';
     }
 
+    // ─── Mission reveals (fullpage section — keeps existing timed cascade) ───
     function triggerMissionReveals() {
       const els = document.querySelectorAll('.m-reveal');
       els.forEach(function(el) {
@@ -670,100 +677,57 @@ import orthographImg from '../assets/orthograph.png';
       }
     }
 
-    function triggerExpReveals() {
-      var els = document.querySelectorAll('.exp-reveal');
+    // ─── Scroll-section reveals via IntersectionObserver ───
+    var scrollRevealObserver = null;
+
+    function setupScrollRevealObserver() {
+      if (scrollRevealObserver) scrollRevealObserver.disconnect();
+
+      var els = Array.from(scrollSection.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal'));
+      var phones = Array.from(scrollSection.querySelectorAll('.proj-phone'));
+
+      // Reset all to hidden before attaching observer
       els.forEach(function(el) {
+        el.style.transition = 'none';
         el.style.opacity = '0';
         el.style.transform = 'translateY(40px)';
-        el.style.transition = 'none';
       });
-      els.forEach(function(el, i) {
-        setTimeout(function() {
+      phones.forEach(function(el) {
+        el.style.transition = 'none';
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(60px) scale(0.92)';
+      });
+
+      scrollRevealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var isPhone = el.classList.contains('proj-phone');
           el.style.transition = 'opacity 0.85s ' + EASE + ', transform 0.85s ' + EASE;
           el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 350 + i * 150);
-      });
+          el.style.transform = isPhone ? 'translateY(0) scale(1)' : 'translateY(0)';
+          scrollRevealObserver.unobserve(el);
+        });
+      }, { root: scrollSection, threshold: 0.1 });
+
+      els.concat(phones).forEach(function(el) { scrollRevealObserver.observe(el); });
     }
 
-    function resetExpReveals() {
-      var els = document.querySelectorAll('.exp-reveal');
-      els.forEach(function(el) {
+    function resetScrollSection() {
+      if (scrollRevealObserver) { scrollRevealObserver.disconnect(); scrollRevealObserver = null; }
+      lenis.stop();
+      lenis.scrollTo(0, { immediate: true });
+      scrollSection.scrollTop = 0;
+      scrollSection.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal').forEach(function(el) {
         el.style.transition = 'none';
         el.style.opacity = '0';
         el.style.transform = 'translateY(40px)';
       });
-      // scroll back to top
-      if (expSection) expSection.scrollTop = 0;
-    }
-
-    function triggerContactReveals() {
-      var els = document.querySelectorAll('.c-reveal');
-      els.forEach(function(el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(36px)';
-        el.style.transition = 'none';
-      });
-      els.forEach(function(el, i) {
-        setTimeout(function() {
-          el.style.transition = 'opacity 0.85s ' + EASE + ', transform 0.85s ' + EASE;
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 80 + i * 140);
-      });
-    }
-
-    function resetContactReveals() {
-      var els = document.querySelectorAll('.c-reveal');
-      els.forEach(function(el) {
+      scrollSection.querySelectorAll('.proj-phone').forEach(function(el) {
         el.style.transition = 'none';
         el.style.opacity = '0';
-        el.style.transform = 'translateY(36px)';
+        el.style.transform = 'translateY(60px) scale(0.92)';
       });
-    }
-
-    function triggerProjReveals() {
-      var els = document.querySelectorAll('.proj-reveal');
-      els.forEach(function(el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px)';
-        el.style.transition = 'none';
-      });
-      els.forEach(function(el, i) {
-        setTimeout(function() {
-          el.style.transition = 'opacity 0.85s ' + EASE + ', transform 0.85s ' + EASE;
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 350 + i * 150);
-      });
-      // Animate phone mockups with a float-up + scale
-      var phones = document.querySelectorAll('.proj-phone');
-      phones.forEach(function(ph, i) {
-        ph.style.opacity = '0';
-        ph.style.transform = 'translateY(60px) scale(0.92)';
-        ph.style.transition = 'none';
-        setTimeout(function() {
-          ph.style.transition = 'opacity 1s ' + EASE + ', transform 1s ' + EASE;
-          ph.style.opacity = '1';
-          ph.style.transform = 'translateY(0) scale(1)';
-        }, 600 + i * 200);
-      });
-    }
-
-    function resetProjReveals() {
-      var els = document.querySelectorAll('.proj-reveal');
-      els.forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px)';
-      });
-      var phones = document.querySelectorAll('.proj-phone');
-      phones.forEach(function(ph) {
-        ph.style.transition = 'none';
-        ph.style.opacity = '0';
-        ph.style.transform = 'translateY(60px) scale(0.92)';
-      });
-      if (projSection) projSection.scrollTop = 0;
     }
 
     var PARALLAX_TRANS = 'transform ' + DURATION + 'ms ' + EASE;
@@ -786,7 +750,6 @@ import orthographImg from '../assets/orthograph.png';
       var dir = next > prev ? 1 : -1;
       current = next;
 
-      // Lock scrollable sections during transition to prevent momentum bleed
       var enteringScrollable = scrollableSections.indexOf(next) !== -1;
       if (enteringScrollable) sections[next].style.overflowY = 'hidden';
 
@@ -803,11 +766,7 @@ import orthographImg from '../assets/orthograph.png';
 
       clearTrans(sections[next]);
       sections[next].style.opacity = '0';
-      if (dir === 1) {
-        sections[next].style.transform = 'translateY(60px)';
-      } else {
-        sections[next].style.transform = 'scale(0.92) translateY(-3%)';
-      }
+      sections[next].style.transform = dir === 1 ? 'translateY(60px)' : 'scale(0.92) translateY(-3%)';
 
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
@@ -816,23 +775,23 @@ import orthographImg from '../assets/orthograph.png';
           sections[next].style.opacity = '1';
 
           if (dir === -1 && next === 0) setParallax(0, 0, true);
-
-          // Trigger entering section's content reveals
           if (next === 1) triggerMissionReveals();
-          if (next === 2) { triggerProjReveals(); topMomentumCooldown = false; bottomMomentumCooldown = false; }
-          if (next === 3) { triggerExpReveals(); topMomentumCooldown = false; bottomMomentumCooldown = false; }
-          if (next === 4) triggerContactReveals();
+          if (next === 2) {
+            topMomentumCooldown = false;
+            bottomMomentumCooldown = false;
+            // Start IntersectionObserver once the slide is settling
+            setTimeout(setupScrollRevealObserver, 100);
+          }
 
           updateDots(next);
 
-          // Reset the PREVIOUS section's content only after it has fully exited
           setTimeout(function() {
             if (prev === 1) resetMissionReveals();
-            if (prev === 2) resetProjReveals();
-            if (prev === 3) resetExpReveals();
-            if (prev === 4) resetContactReveals();
-            // Restore scrollable section overflow and add a short cooldown
-            if (enteringScrollable) sections[next].style.overflowY = 'auto';
+            if (prev === 2) resetScrollSection();
+            if (enteringScrollable) {
+              sections[next].style.overflowY = 'auto';
+              if (next === 2) lenis.start();
+            }
             busy = false;
             wheelAcc = 0;
             cooldown = true;
@@ -844,21 +803,18 @@ import orthographImg from '../assets/orthograph.png';
 
     updateDots(0);
     resetMissionReveals();
-    resetExpReveals();
-    resetProjReveals();
-    resetContactReveals();
+    resetScrollSection();
 
-    // ─── Cooldown after momentum carries a scrollable section to scrollTop=0 ───
+    // ─── Momentum cooldowns ───
     var topMomentumCooldown = false;
     var topMomentumTimer = null;
-    // ─── Cooldown after momentum carries a scrollable section to bottom ───
     var bottomMomentumCooldown = false;
     var bottomMomentumTimer = null;
+
     function attachScrollCooldown(el) {
       el.addEventListener('scroll', function() {
         var atTop = el.scrollTop <= 0;
         var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-        // Top cooldown
         if (!atTop) {
           clearTimeout(topMomentumTimer);
           topMomentumCooldown = false;
@@ -867,7 +823,6 @@ import orthographImg from '../assets/orthograph.png';
           clearTimeout(topMomentumTimer);
           topMomentumTimer = setTimeout(function() { topMomentumCooldown = false; }, 450);
         }
-        // Bottom cooldown
         if (!atBottom) {
           clearTimeout(bottomMomentumTimer);
           bottomMomentumCooldown = false;
@@ -878,10 +833,9 @@ import orthographImg from '../assets/orthograph.png';
         }
       });
     }
-    attachScrollCooldown(expSection);
-    attachScrollCooldown(projSection);
+    attachScrollCooldown(scrollSection);
 
-    // ─── Wheel handler with scroll-unlock for experience section ───
+    // ─── Wheel ───
     var wheelAcc = 0;
     var wheelTimer = null;
     var cooldown = false;
@@ -891,23 +845,17 @@ import orthographImg from '../assets/orthograph.png';
         var el = sections[current];
         var atTop = el.scrollTop <= 0;
         var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-
         if (e.deltaY > 0) {
           if (atBottom) { e.preventDefault(); if (!bottomMomentumCooldown) goTo(current + 1); return; }
-          return; // let native scroll happen
+          return;
         }
-
-        // Scrolling up
-        if (!atTop) return; // still mid-content, let it scroll naturally
-
-        // At top — only exit if not in momentum cooldown
+        if (!atTop) return;
         e.preventDefault();
         if (!topMomentumCooldown) goTo(current - 1);
         return;
       }
-
       e.preventDefault();
-      if (cooldown) return; // swallow tail momentum after a transition
+      if (cooldown) return;
       wheelAcc += e.deltaY;
       if (wheelTimer) clearTimeout(wheelTimer);
       wheelTimer = setTimeout(function() { wheelAcc = 0; }, 200);
@@ -938,9 +886,8 @@ import orthographImg from '../assets/orthograph.png';
         var atTop = el.scrollTop <= 0;
         var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
         if (dy > 50) {
-          // swiping up — at bottom means go to next section
           if (atBottom) { goTo(current + 1); return; }
-          return; // let native scroll happen
+          return;
         }
         if (dy < -50 && atTop) goTo(current - 1);
         return;
@@ -966,9 +913,9 @@ import orthographImg from '../assets/orthograph.png';
     .c-reveal { opacity: 0; transform: translateY(36px); }
     #scroll-hint { transition: opacity 0.5s ease; }
     .section-dot { transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease; }
-    /* Hide native scrollbar on scrollable sections */
-    #s-projects, #s-experience { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-    #s-projects::-webkit-scrollbar, #s-experience::-webkit-scrollbar { display: none; }
+    /* Hide native scrollbar on merged scroll section */
+    #s-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
+    #s-scroll::-webkit-scrollbar { display: none; }
     /* Floating next-section arrow */
     #float-next-btn {
       position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%);
