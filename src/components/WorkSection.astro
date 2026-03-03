@@ -1,0 +1,135 @@
+---
+import { Image } from 'astro:assets';
+import sonrisaImg from '../assets/sonrisa.png';
+import orthographImg from '../assets/orthograph.png';
+---
+
+<div id="anchor-work">
+<div class="relative z-10 min-h-screen">
+
+  <!-- Spacer for fixed header -->
+  <div class="h-24"></div>
+
+  <!-- Section header -->
+  <div class="max-w-5xl mx-auto px-6 md:px-16 pt-12 pb-16">
+    <div class="exp-reveal flex items-center gap-4 mb-6">
+      <div class="w-8 h-px bg-white/40"></div>
+      <span class="text-xs font-medium tracking-[0.3em] uppercase text-white/50">Work</span>
+    </div>
+    <h2 class="exp-reveal text-3xl sm:text-4xl md:text-5xl font-bold leading-[1.1]" style="font-family: 'Montserrat', sans-serif;">
+      Where I've built things
+    </h2>
+  </div>
+
+  <!-- ════ JOB 1: SONRISA (featured) ════ -->
+  <div class="max-w-5xl mx-auto px-6 md:px-16 mb-20 md:mb-32">
+    <div class="exp-reveal relative rounded-2xl border border-white/10 overflow-hidden" style="background: linear-gradient(135deg, rgba(15,25,60,0.6) 0%, rgba(8,14,36,0.4) 100%);">
+
+      <!-- Glow accent -->
+      <div class="absolute -top-20 -right-20 w-60 h-60 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(60,100,255,0.12) 0%, transparent 70%);"></div>
+
+      <div class="relative z-10 p-8 md:p-12 lg:p-16">
+
+        <!-- Top row: badge + dates -->
+        <div class="flex flex-wrap items-center gap-3 mb-6">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase bg-indigo-500/20 text-indigo-300 border border-indigo-400/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+            Current
+          </span>
+          <span class="text-sm text-white/40">2025 — Present</span>
+        </div>
+
+        <!-- Company + Role -->
+        <div class="flex flex-col md:flex-row md:items-end gap-4 md:gap-8 mb-8">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
+              <Image src={sonrisaImg} alt="Sonrisa logo" width={112} class="w-full h-full object-contain"/>
+            </div>
+            <div>
+              <h3 class="text-2xl md:text-3xl font-bold" style="font-family: 'Montserrat', sans-serif;">Sonrisa</h3>
+              <p class="text-white/50 text-sm mt-0.5">AI Software Engineer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <p class="text-white/55 text-base md:text-lg leading-relaxed max-w-2xl mb-10">
+          Building AI agents and orchestrating sub-agent workflows. Designing intelligent agent tours, automating complex backend pipelines, and creating scalable agent architectures.
+        </p>
+
+        <!-- What I do -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+          <div class="rounded-xl bg-white/[0.03] border border-white/[0.06] p-5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center mb-3">
+              <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4 class="text-sm font-semibold mb-1">Agent Workflows</h4>
+            <p class="text-xs text-white/40 leading-relaxed">Designing and building multi-step AI agent pipelines</p>
+          </div>
+          <div class="rounded-xl bg-white/[0.03] border border-white/[0.06] p-5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center mb-3">
+              <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" stroke-linecap="round"/><path d="M12 8v8m-4-4h8" stroke-linecap="round"/></svg>
+            </div>
+            <h4 class="text-sm font-semibold mb-1">Sub-Agent Architecture</h4>
+            <p class="text-xs text-white/40 leading-relaxed">Creating hierarchical agent systems with sub-agent tours</p>
+          </div>
+          <div class="rounded-xl bg-white/[0.03] border border-white/[0.06] p-5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center mb-3">
+              <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4 class="text-sm font-semibold mb-1">Backend Systems</h4>
+            <p class="text-xs text-white/40 leading-relaxed">Scalable backend infrastructure for AI-driven products</p>
+          </div>
+        </div>
+
+        <!-- Tech stack -->
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">Python</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">LLMs</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">AI Agents</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">FastAPI</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">Docker</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">MinIO</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">Redis</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">Temporal.io</span>
+          <span class="px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.08] text-xs font-medium text-white/60">Langfuse</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ JOB 2: ORTHOGRAPH (compact) ════ -->
+  <div class="max-w-5xl mx-auto px-6 md:px-16 mb-20">
+    <div class="exp-reveal relative rounded-xl border border-white/10 p-6 md:p-8" style="background: rgba(14,20,46,0.7);">
+
+      <div class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
+        <div class="w-11 h-11 rounded-lg overflow-hidden flex-shrink-0">
+          <Image src={orthographImg} alt="OrthoGraph logo" width={100} class="w-full h-full object-contain"/>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-3 mb-1">
+            <h3 class="text-lg font-bold text-white/85" style="font-family: 'Montserrat', sans-serif;">OrthoGraph</h3>
+            <span class="text-xs text-white/45">2024 — 2025</span>
+          </div>
+          <p class="text-sm text-white/55">Fullstack Developer · Remote</p>
+          <p class="text-sm text-white/45 mt-2 leading-relaxed">Maintained a Laravel-based backend and containerized it with Docker.</p>
+
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            <span class="px-2 py-1 rounded-md bg-white/[0.07] border border-white/[0.1] text-[11px] font-medium text-white/55">PHP</span>
+            <span class="px-2 py-1 rounded-md bg-white/[0.07] border border-white/[0.1] text-[11px] font-medium text-white/55">Laravel</span>
+            <span class="px-2 py-1 rounded-md bg-white/[0.07] border border-white/[0.1] text-[11px] font-medium text-white/55">Docker</span>
+            <span class="px-2 py-1 rounded-md bg-white/[0.07] border border-white/[0.1] text-[11px] font-medium text-white/55">Git</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom spacer -->
+  <div class="h-32"></div>
+
+</div>
+</div><!-- /anchor-work -->
