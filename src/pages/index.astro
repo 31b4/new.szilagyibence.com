@@ -1,5 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from 'astro:assets';
+import earthImg from '../assets/earth.png';
+import moonImg from '../assets/moon.png';
+import neptuneImg from '../assets/neptune.png';
+import trackit1Img from '../assets/trackit1.png';
+import trackit2Img from '../assets/trackit2.png';
+import protocol1Img from '../assets/protocol1.png';
+import protocol2Img from '../assets/protocol2.png';
+import sonrisaImg from '../assets/sonrisa.png';
+import orthographImg from '../assets/orthograph.png';
 ---
 
 <Layout title="31b4 — Szilagyi Bence">
@@ -89,15 +99,15 @@ import Layout from "../layouts/Layout.astro";
             <h1 class="relative z-10 text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
               Szilagyi<br />Bence
             </h1>
-            <img src="/moon.png" alt="Moon" class="parallax-moon absolute w-16 md:w-20 lg:w-24 xl:w-28 aspect-square object-cover" style="border-radius: 50%; bottom: -5.5rem; left: 1rem; z-index: 20;"/>
+            <Image src={moonImg} alt="Moon" width={500} class="parallax-moon absolute w-16 md:w-20 lg:w-24 xl:w-28 aspect-square object-cover" style="border-radius: 50%; bottom: -5.5rem; left: 1rem; z-index: 20;" loading="eager"/>
           </div>
 
           <div class="relative flex items-center justify-center w-64 md:w-80 lg:w-96 xl:w-[28rem] aspect-square">
-            <img src="/earth.png" alt="Earth from space" class="w-full h-full object-contain"/>
+            <Image src={earthImg} alt="Earth from space" width={900} class="w-full h-full object-contain" loading="eager"/>
           </div>
 
           <div class="relative flex flex-col items-end justify-center text-right -translate-y-20">
-            <img src="/neptune.png" alt="Neptune" class="parallax-neptune absolute w-16 md:w-20 lg:w-24 xl:w-28 object-contain" style="top: -5.2rem; right: -0.5rem; z-index: 20;"/>
+            <Image src={neptuneImg} alt="Neptune" width={500} class="parallax-neptune absolute w-16 md:w-20 lg:w-24 xl:w-28 object-contain" style="top: -5.2rem; right: -0.5rem; z-index: 20;" loading="eager"/>
             <h1 class="relative z-10 text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
               Building<br />Health
             </h1>
@@ -107,16 +117,16 @@ import Layout from "../layouts/Layout.astro";
         <!-- MOBILE -->
         <div class="lg:hidden relative w-full flex items-center justify-center" style="min-height: 70vh;">
           <div class="relative w-56 sm:w-72 md:w-80 aspect-square">
-            <img src="/earth.png" alt="Earth from space" class="w-full h-full object-contain"/>
+            <Image src={earthImg} alt="Earth from space" width={900} class="w-full h-full object-contain" loading="eager"/>
           </div>
           <div class="absolute top-8 left-0 flex flex-col items-start">
             <h1 class="relative z-10 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
               Szilagyi<br />Bence
             </h1>
-            <img src="/moon.png" alt="Moon" class="parallax-moon absolute w-20 sm:w-24 md:w-28 aspect-square object-cover" style="border-radius: 50%; bottom: -4rem; left: 0.5rem; z-index: 20;"/>
+            <Image src={moonImg} alt="Moon" width={500} class="parallax-moon absolute w-20 sm:w-24 md:w-28 aspect-square object-cover" style="border-radius: 50%; bottom: -4rem; left: 0.5rem; z-index: 20;" loading="eager"/>
           </div>
           <div class="absolute bottom-8 right-0 flex flex-col items-end text-right">
-            <img src="/neptune.png" alt="Neptune" class="parallax-neptune absolute w-20 sm:w-24 md:w-28 object-contain" style="top: -3.9rem; right: -0.8rem; z-index: 20;"/>
+            <Image src={neptuneImg} alt="Neptune" width={500} class="parallax-neptune absolute w-20 sm:w-24 md:w-28 object-contain" style="top: -3.9rem; right: -0.8rem; z-index: 20;" loading="eager"/>
             <h1 class="relative z-10 text-3xl sm:text-4xl md:text-5xl font-extrabold leading-[1.05]" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.12em;">
               Building<br />Health
             </h1>
@@ -276,10 +286,10 @@ import Layout from "../layouts/Layout.astro";
                 <!-- Phone mockups -->
                 <div class="flex-shrink-0 flex items-start gap-4 md:gap-6 mx-auto lg:mx-0 lg:mt-8">
                   <div class="proj-phone w-[130px] sm:w-[160px] md:w-[190px] lg:w-[210px]">
-                    <img src="/trackit1.png" alt="TrackIt dashboard showing body measurements" class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-blue-950/40"/>
+                    <Image src={trackit1Img} alt="TrackIt dashboard showing body measurements" width={420} class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-blue-950/40"/>
                   </div>
                   <div class="proj-phone w-[130px] sm:w-[160px] md:w-[190px] lg:w-[210px] mt-12 md:mt-16">
-                    <img src="/trackit2.png" alt="TrackIt progress photos and analytics" class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-blue-950/40"/>
+                    <Image src={trackit2Img} alt="TrackIt progress photos and analytics" width={420} class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-blue-950/40"/>
                   </div>
                 </div>
 
@@ -365,10 +375,10 @@ import Layout from "../layouts/Layout.astro";
                 <!-- Phone mockups -->
                 <div class="flex-shrink-0 flex items-start gap-4 md:gap-6 mx-auto lg:mx-0 lg:mt-8">
                   <div class="proj-phone w-[130px] sm:w-[160px] md:w-[190px] lg:w-[210px]">
-                    <img src="/protocol1.png" alt="Protocol supplement logging screen" class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-violet-950/40"/>
+                    <Image src={protocol1Img} alt="Protocol supplement logging screen" width={420} class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-violet-950/40"/>
                   </div>
                   <div class="proj-phone w-[130px] sm:w-[160px] md:w-[190px] lg:w-[210px] mt-12 md:mt-16">
-                    <img src="/protocol2.png" alt="Protocol bloodwork and analytics screen" class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-violet-950/40"/>
+                    <Image src={protocol2Img} alt="Protocol bloodwork and analytics screen" width={420} class="w-full h-auto rounded-[22px] md:rounded-[28px] shadow-2xl shadow-violet-950/40"/>
                   </div>
                 </div>
 
@@ -425,7 +435,7 @@ import Layout from "../layouts/Layout.astro";
               <div class="flex flex-col md:flex-row md:items-end gap-4 md:gap-8 mb-8">
                 <div class="flex items-center gap-4">
                   <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
-                    <img src="/sonrisa.png" alt="Sonrisa logo" class="w-full h-full object-contain"/>
+                    <Image src={sonrisaImg} alt="Sonrisa logo" width={112} class="w-full h-full object-contain"/>
                   </div>
                   <div>
                     <h3 class="text-2xl md:text-3xl font-bold" style="font-family: 'Montserrat', sans-serif;">Sonrisa</h3>
@@ -487,7 +497,7 @@ import Layout from "../layouts/Layout.astro";
 
             <div class="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
               <div class="w-11 h-11 rounded-lg overflow-hidden flex-shrink-0">
-                <img src="/orthograph.png" alt="OrthoGraph logo" class="w-full h-full object-contain"/>
+                <Image src={orthographImg} alt="OrthoGraph logo" width={100} class="w-full h-full object-contain"/>
               </div>
 
               <div class="flex-1 min-w-0">
