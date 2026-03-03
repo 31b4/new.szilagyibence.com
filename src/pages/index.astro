@@ -51,12 +51,14 @@ import ContactSection from "../components/ContactSection.astro";
     const dots = document.querySelectorAll('.section-dot');
     const scrollHint = document.getElementById('scroll-hint');
     const floatNextBtn = document.getElementById('float-next-btn');
+    const siteHeader = document.querySelector('.site-header');
     const siteFooter = document.querySelector('footer');
 
     if (floatNextBtn) floatNextBtn.addEventListener('click', function() { goTo(current + 1); });
 
     let current = 0;
     let busy = false;
+    let pendingAnchor = null;
     const DURATION = 900;
     const EASE = 'cubic-bezier(0.76, 0, 0.24, 1)';
 
@@ -85,6 +87,9 @@ import ContactSection from "../components/ContactSection.astro";
         floatNextBtn.style.opacity = isLast ? '0' : '';
         floatNextBtn.style.pointerEvents = isLast ? 'none' : '';
       }
+      var onScrollSection = idx === 2;
+      if (siteHeader) siteHeader.classList.toggle('glass-active', onScrollSection);
+      if (siteFooter) siteFooter.classList.toggle('glass-active', onScrollSection);
       if (siteFooter) siteFooter.style.opacity = '1';
     }
 
@@ -215,6 +220,16 @@ import ContactSection from "../components/ContactSection.astro";
       sections[next].style.opacity = '0';
       sections[next].style.transform = dir === 1 ? 'translateY(60px)' : 'scale(0.92) translateY(-3%)';
 
+      if (next === 2 && pendingAnchor) {
+        var preAnchorTarget = document.getElementById(pendingAnchor);
+        pendingAnchor = null;
+        if (preAnchorTarget) {
+          lenis.stop();
+          lenis.scrollTo(preAnchorTarget, { immediate: true });
+          scrollSection.scrollTop = preAnchorTarget.offsetTop;
+        }
+      }
+
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
           setTrans(sections[next], DURATION);
@@ -237,7 +252,9 @@ import ContactSection from "../components/ContactSection.astro";
             if (prev === 2) resetScrollSection();
             if (enteringScrollable) {
               sections[next].style.overflowY = 'auto';
-              if (next === 2) lenis.start();
+              if (next === 2) {
+                lenis.start();
+              }
             }
             busy = false;
             wheelAcc = 0;
@@ -345,7 +362,16 @@ import ContactSection from "../components/ContactSection.astro";
     document.querySelectorAll('[data-go]').forEach(function(el) {
       el.addEventListener('click', function(e) {
         e.preventDefault();
-        goTo(Number(el.dataset.go));
+        var targetSection = Number(el.dataset.go);
+        var anchor = el.dataset.anchor || null;
+        if (targetSection === current && anchor) {
+          // Already on this section — just scroll to anchor
+          var anchorEl = document.getElementById(anchor);
+          if (anchorEl) lenis.scrollTo(anchorEl, { duration: 0.35 });
+        } else {
+          pendingAnchor = targetSection === 2 ? anchor : null;
+          goTo(targetSection);
+        }
       });
     });
   </script>
