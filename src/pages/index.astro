@@ -12,27 +12,27 @@ import ContactSection from "../components/ContactSection.astro";
 
   <SiteHeader />
 
-  <!-- FULLPAGE CONTAINER -->
-  <div id="fullpage" style="position: fixed; top: 0; left: 0; right: 0; height: var(--app-vh, 100dvh); overflow: hidden;">
+  <!-- ── Normal document flow ── -->
+  <HeroSection />
+  <MissionSection />
 
-    <HeroSection />
-    <MissionSection />
-
-    <!-- SECTION 2: SCROLL (Projects + Work + Contact) -->
-    <section id="s-scroll" style="position: absolute; inset: 0; will-change: transform, opacity; transform: translateY(var(--app-vh, 100dvh)); opacity: 0; overflow-y: hidden; background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);"><div id="s-scroll-content">
-      <ProjectsSection />
-      <WorkSection />
-      <ContactSection />
-    </div><!-- /s-scroll-content --></section>
-
-  </div>
+  <!-- Projects + Work + Contact -->
+  <section id="s-scroll" style="background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(10,18,48,1) 0%, rgba(4,8,22,1) 40%, rgba(0,0,0,1) 80%);">
+    <ProjectsSection />
+    <WorkSection />
+    <ContactSection />
+  </section>
 
   <script>
     import Lenis from 'lenis';
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
 
+    // ── Viewport height util ──
     function setAppViewportHeight() {
-      var nextHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--app-vh', nextHeight + 'px');
+      var h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty('--app-vh', h + 'px');
     }
     setAppViewportHeight();
     window.addEventListener('resize', setAppViewportHeight);
@@ -42,46 +42,177 @@ import ContactSection from "../components/ContactSection.astro";
       window.visualViewport.addEventListener('scroll', setAppViewportHeight);
     }
 
-    const sections = [
-      document.getElementById('s-hero'),
-      document.getElementById('s-mission'),
-      document.getElementById('s-scroll'),
-    ];
-
-    const scrollableSections = [2];
-    const scrollSection = sections[2];
-
+    // ── Lenis smooth scroll (whole page) ──
     const lenis = new Lenis({
-      wrapper: scrollSection,
-      content: document.getElementById('s-scroll-content'),
       smoothWheel: true,
       duration: 1.4,
       easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
     });
-    lenis.stop();
-    (function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); })(performance.now());
-    const dots = document.querySelectorAll('.section-dot');
-    const scrollHint = document.getElementById('scroll-hint');
-    const floatNextBtn = document.getElementById('float-next-btn');
-    const siteHeader = document.querySelector('.site-header');
-    const siteFooter = document.querySelector('footer');
+    function lenisRaf(time) { lenis.raf(time); requestAnimationFrame(lenisRaf); }
+    requestAnimationFrame(lenisRaf);
 
-    if (floatNextBtn) floatNextBtn.addEventListener('click', function() { goTo(current + 1); });
+    // Tell GSAP's ScrollTrigger about Lenis scroll position
+    lenis.on('scroll', function() { ScrollTrigger.update(); });
 
-    let current = 0;
-    let busy = false;
-    let pendingAnchor = null;
-    const DURATION = 900;
-    const EASE = 'cubic-bezier(0.76, 0, 0.24, 1)';
+    const EASE_STR = 'power2.out';
 
-    function setTrans(el, dur) {
-      el.style.transition = 'transform ' + dur + 'ms ' + EASE + ', opacity ' + dur + 'ms ' + EASE;
+    // ── Hero: entrance animation on load ──
+    gsap.fromTo('#s-hero .hero-content', { opacity: 0, y: 40 }, {
+      opacity: 1, y: 0, duration: 1.1, ease: EASE_STR,
+      stagger: 0.12, delay: 0.15,
+    });
+
+    // ── Hero: scroll-out — scale down & fade as you scroll away ──
+    gsap.to('#s-hero', {
+      scale: 0.92,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#s-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+
+    // ── Hero parallax: moon moves up, neptune moves down ──
+    gsap.to('.parallax-moon', {
+      y: -80,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#s-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+    gsap.to('.parallax-neptune', {
+      y: 80,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#s-hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+
+    // ── Mission: slide in from below as it enters viewport ──
+    gsap.fromTo('#s-mission', { y: 60, opacity: 0 }, {
+      y: 0, opacity: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#s-mission',
+        start: 'top 85%',
+        end: 'top 20%',
+        scrub: true,
+      },
+    });
+
+    // ── Mission orb subtle rise ──
+    gsap.to('.mission-orb', {
+      y: -20,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#s-mission',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+
+    // ── Mission content: staggered cascade as section scrolls into view ──
+    var mRevealEls = Array.from(document.querySelectorAll('.m-reveal'));
+    mRevealEls.forEach(function(el, i) {
+      gsap.fromTo(el,
+        { opacity: 0, y: 36 },
+        {
+          opacity: 1, y: 0,
+          duration: 0.85,
+          ease: EASE_STR,
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            end: 'top 55%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: i * 0.08,
+        }
+      );
+    });
+
+    // ── Projects / Work / Contact: IntersectionObserver reveals ──
+    var REVEAL_EASE = 'cubic-bezier(0.76, 0, 0.24, 1)';
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        var isPhone = el.classList.contains('proj-phone');
+        el.style.transition = 'opacity 0.85s ' + REVEAL_EASE + ', transform 0.85s ' + REVEAL_EASE;
+        el.style.opacity = '1';
+        el.style.transform = isPhone ? 'translateY(0) scale(1)' : 'translateY(0)';
+        revealObserver.unobserve(el);
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+    document.querySelectorAll('.proj-phone').forEach(function(el) {
+      revealObserver.observe(el);
+    });
+
+    // ── Header glass-active when past hero ──
+    var siteHeader = document.querySelector('.site-header');
+    ScrollTrigger.create({
+      trigger: '#s-mission',
+      start: 'top 50%',
+      onEnter: function() { if (siteHeader) siteHeader.classList.add('glass-active'); },
+      onLeaveBack: function() { if (siteHeader) siteHeader.classList.remove('glass-active'); },
+    });
+
+    // ── Scroll-hint: hide once user starts scrolling ──
+    var scrollHint = document.getElementById('scroll-hint');
+    if (scrollHint) {
+      lenis.on('scroll', function(e) {
+        if (e.scroll > 40) scrollHint.style.opacity = '0';
+        else scrollHint.style.opacity = '1';
+      });
     }
-    function clearTrans(el) {
-      el.style.transition = 'none';
-    }
 
-    function updateDots(idx) {
+    // ── Navigation: data-go / data-anchor clicks ──
+    var sectionAnchors = {
+      0: '#s-hero',
+      1: '#s-mission',
+      2: '#anchor-projects',
+    };
+    document.querySelectorAll('[data-go]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetIdx = Number(el.dataset.go);
+        var anchor = el.dataset.anchor || null;
+        var targetId = anchor ? ('#' + anchor) : (sectionAnchors[targetIdx] || '#s-hero');
+        var targetEl = document.querySelector(targetId);
+        if (targetEl) lenis.scrollTo(targetEl, { duration: 1.4 });
+      });
+    });
+
+    // ── Section dots: highlight based on scroll position ──
+    var dots = document.querySelectorAll('.section-dot');
+    var dotSections = ['#s-hero', '#s-mission', '#anchor-projects'];
+    dotSections.forEach(function(selector, i) {
+      var triggerEl = document.querySelector(selector);
+      if (!triggerEl) return;
+      ScrollTrigger.create({
+        trigger: triggerEl,
+        start: 'top 50%',
+        end: 'bottom 50%',
+        onEnter: function() { setActiveDot(i); },
+        onEnterBack: function() { setActiveDot(i); },
+      });
+    });
+
+    function setActiveDot(idx) {
       dots.forEach(function(d, i) {
         if (i === idx) {
           d.style.opacity = '0.9';
@@ -93,317 +224,47 @@ import ContactSection from "../components/ContactSection.astro";
           d.style.transform = 'scale(1)';
         }
       });
-      if (scrollHint) scrollHint.style.opacity = idx === 0 ? '1' : '0';
-      if (floatNextBtn) {
-        var isLast = idx >= sections.length - 1;
-        floatNextBtn.style.opacity = isLast ? '0' : '';
-        floatNextBtn.style.pointerEvents = isLast ? 'none' : '';
-      }
-      var onScrollSection = idx === 2;
-      if (siteHeader) siteHeader.classList.toggle('glass-active', onScrollSection);
-      if (siteFooter) siteFooter.classList.remove('glass-active');
-      if (siteFooter) {
-        siteFooter.style.opacity = onScrollSection ? '0' : '1';
-        siteFooter.style.pointerEvents = onScrollSection ? 'none' : 'auto';
-      }
     }
+    setActiveDot(0);
 
-    // ─── Mission reveals (fullpage section — keeps existing timed cascade) ───
-    function triggerMissionReveals() {
-      const els = document.querySelectorAll('.m-reveal');
-      els.forEach(function(el) {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(36px)';
-        el.style.transition = 'none';
-      });
-      els.forEach(function(el, i) {
-        setTimeout(function() {
-          el.style.transition = 'opacity 0.85s ' + EASE + ', transform 0.85s ' + EASE;
-          el.style.opacity = '1';
-          el.style.transform = 'translateY(0)';
-        }, 80 + i * 140);
-      });
-      var orb = document.querySelector('.mission-orb');
-      if (orb) {
-        orb.style.transition = 'transform 2s ' + EASE;
-        orb.style.transform = 'translate(-50%, -52%)';
-      }
-    }
-
-    function resetMissionReveals() {
-      var els = document.querySelectorAll('.m-reveal');
-      els.forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(36px)';
-      });
-      var orb = document.querySelector('.mission-orb');
-      if (orb) {
-        orb.style.transition = 'none';
-        orb.style.transform = 'translate(-50%, -50%)';
-      }
-    }
-
-    // ─── Scroll-section reveals via IntersectionObserver ───
-    var scrollRevealObserver = null;
-
-    function setupScrollRevealObserver() {
-      if (scrollRevealObserver) scrollRevealObserver.disconnect();
-
-      var els = Array.from(scrollSection.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal'));
-      var phones = Array.from(scrollSection.querySelectorAll('.proj-phone'));
-
-      // Reset all to hidden before attaching observer
-      els.forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px)';
-      });
-      phones.forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(60px) scale(0.92)';
-      });
-
-      scrollRevealObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (!entry.isIntersecting) return;
-          var el = entry.target;
-          var isPhone = el.classList.contains('proj-phone');
-          el.style.transition = 'opacity 0.85s ' + EASE + ', transform 0.85s ' + EASE;
-          el.style.opacity = '1';
-          el.style.transform = isPhone ? 'translateY(0) scale(1)' : 'translateY(0)';
-          scrollRevealObserver.unobserve(el);
-        });
-      }, { root: scrollSection, threshold: 0.1 });
-
-      els.concat(phones).forEach(function(el) { scrollRevealObserver.observe(el); });
-    }
-
-    function resetScrollSection() {
-      if (scrollRevealObserver) { scrollRevealObserver.disconnect(); scrollRevealObserver = null; }
-      lenis.stop();
-      lenis.scrollTo(0, { immediate: true });
-      scrollSection.scrollTop = 0;
-      scrollSection.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal').forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(40px)';
-      });
-      scrollSection.querySelectorAll('.proj-phone').forEach(function(el) {
-        el.style.transition = 'none';
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(60px) scale(0.92)';
-      });
-    }
-
-    var PARALLAX_TRANS = 'transform ' + DURATION + 'ms ' + EASE;
-
-    function setParallax(moonY, neptuneY, animate) {
-      document.querySelectorAll('.parallax-moon').forEach(function(el) {
-        el.style.transition = animate ? PARALLAX_TRANS : 'none';
-        el.style.transform = moonY === 0 ? 'none' : 'translateY(' + moonY + 'px)';
-      });
-      document.querySelectorAll('.parallax-neptune').forEach(function(el) {
-        el.style.transition = animate ? PARALLAX_TRANS : 'none';
-        el.style.transform = neptuneY === 0 ? 'none' : 'translateY(' + neptuneY + 'px)';
-      });
-    }
-
-    function goTo(next) {
-      if (busy || next === current || next < 0 || next >= sections.length) return;
-      busy = true;
-      var prev = current;
-      var dir = next > prev ? 1 : -1;
-      current = next;
-
-      var enteringScrollable = scrollableSections.indexOf(next) !== -1;
-      if (enteringScrollable) sections[next].style.overflowY = 'hidden';
-
-      setTrans(sections[prev], DURATION);
-      if (dir === 1) {
-        sections[prev].style.transform = 'scale(0.92) translateY(-3%)';
-        sections[prev].style.opacity = '0';
-        if (prev === 0) setParallax(-55, 55, true);
-      } else {
-        sections[prev].style.transform = 'translateY(var(--app-vh, 100dvh))';
-        sections[prev].style.opacity = '0';
-        if (next === 0) setParallax(-55, 55, false);
-      }
-
-      clearTrans(sections[next]);
-      sections[next].style.opacity = '0';
-      sections[next].style.transform = dir === 1 ? 'translateY(60px)' : 'scale(0.92) translateY(-3%)';
-
-      if (next === 2 && pendingAnchor) {
-        var preAnchorTarget = document.getElementById(pendingAnchor);
-        pendingAnchor = null;
-        if (preAnchorTarget) {
-          lenis.stop();
-          lenis.scrollTo(preAnchorTarget, { immediate: true });
-          scrollSection.scrollTop = preAnchorTarget.offsetTop;
-        }
-      }
-
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          setTrans(sections[next], DURATION);
-          sections[next].style.transform = 'none';
-          sections[next].style.opacity = '1';
-
-          if (dir === -1 && next === 0) setParallax(0, 0, true);
-          if (next === 1) triggerMissionReveals();
-          if (next === 2) {
-            topMomentumCooldown = false;
-            bottomMomentumCooldown = false;
-            // Start IntersectionObserver once the slide is settling
-            setTimeout(setupScrollRevealObserver, 100);
-          }
-
-          updateDots(next);
-
-          setTimeout(function() {
-            if (prev === 1) resetMissionReveals();
-            if (prev === 2) resetScrollSection();
-            if (enteringScrollable) {
-              sections[next].style.overflowY = 'auto';
-              if (next === 2) {
-                lenis.start();
-              }
-            }
-            busy = false;
-            wheelAcc = 0;
-            cooldown = true;
-            setTimeout(function() { cooldown = false; }, 350);
-          }, DURATION + 100);
-        });
-      });
-    }
-
-    updateDots(0);
-    resetMissionReveals();
-    resetScrollSection();
-
-    // ─── Momentum cooldowns ───
-    var topMomentumCooldown = false;
-    var topMomentumTimer = null;
-    var bottomMomentumCooldown = false;
-    var bottomMomentumTimer = null;
-
-    function attachScrollCooldown(el) {
-      el.addEventListener('scroll', function() {
-        var atTop = el.scrollTop <= 0;
-        var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-        if (!atTop) {
-          clearTimeout(topMomentumTimer);
-          topMomentumCooldown = false;
+    // ── Float-next-btn: hide at bottom of page ──
+    var floatNextBtn = document.getElementById('float-next-btn');
+    if (floatNextBtn) {
+      floatNextBtn.addEventListener('click', function() {
+        var scrollY = window.scrollY;
+        var vh = window.innerHeight;
+        if (scrollY < vh * 0.5) {
+          lenis.scrollTo('#s-mission', { duration: 1.4 });
         } else {
-          topMomentumCooldown = true;
-          clearTimeout(topMomentumTimer);
-          topMomentumTimer = setTimeout(function() { topMomentumCooldown = false; }, 450);
+          lenis.scrollTo('#anchor-projects', { duration: 1.4 });
         }
-        if (!atBottom) {
-          clearTimeout(bottomMomentumTimer);
-          bottomMomentumCooldown = false;
-        } else {
-          bottomMomentumCooldown = true;
-          clearTimeout(bottomMomentumTimer);
-          bottomMomentumTimer = setTimeout(function() { bottomMomentumCooldown = false; }, 450);
-        }
+      });
+      ScrollTrigger.create({
+        trigger: '#s-scroll',
+        start: 'bottom 90%',
+        onEnter: function() { floatNextBtn.style.opacity = '0'; floatNextBtn.style.pointerEvents = 'none'; },
+        onLeaveBack: function() { floatNextBtn.style.opacity = '0.35'; floatNextBtn.style.pointerEvents = ''; },
       });
     }
-    attachScrollCooldown(scrollSection);
-
-    // ─── Wheel ───
-    var wheelAcc = 0;
-    var wheelTimer = null;
-    var cooldown = false;
-    window.addEventListener('wheel', function(e) {
-      var isScrollable = scrollableSections.indexOf(current) !== -1;
-      if (isScrollable) {
-        var el = sections[current];
-        var atTop = el.scrollTop <= 0;
-        var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-        if (e.deltaY > 0) {
-          if (atBottom) { e.preventDefault(); if (!bottomMomentumCooldown) goTo(current + 1); return; }
-          return;
-        }
-        if (!atTop) return;
-        e.preventDefault();
-        if (!topMomentumCooldown) goTo(current - 1);
-        return;
-      }
-      e.preventDefault();
-      if (cooldown) return;
-      wheelAcc += e.deltaY;
-      if (wheelTimer) clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(function() { wheelAcc = 0; }, 200);
-      if (Math.abs(wheelAcc) > 40) {
-        goTo(wheelAcc > 0 ? current + 1 : current - 1);
-        wheelAcc = 0;
-      }
-    }, { passive: false });
-
-    window.addEventListener('keydown', function(e) {
-      var isScrollable = scrollableSections.indexOf(current) !== -1;
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') {
-        if (!isScrollable) goTo(current + 1);
-      }
-      if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-        if (isScrollable && sections[current].scrollTop <= 0) goTo(current - 1);
-        else if (!isScrollable) goTo(current - 1);
-      }
-    });
-
-    var touchY = 0;
-    window.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; }, { passive: true });
-    window.addEventListener('touchend', function(e) {
-      var dy = touchY - e.changedTouches[0].clientY;
-      var isScrollable = scrollableSections.indexOf(current) !== -1;
-      if (isScrollable) {
-        var el = sections[current];
-        var atTop = el.scrollTop <= 0;
-        var atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 2;
-        if (dy > 50) {
-          if (atBottom) { goTo(current + 1); return; }
-          return;
-        }
-        if (dy < -50 && atTop) goTo(current - 1);
-        return;
-      }
-      if (Math.abs(dy) > 50) goTo(dy > 0 ? current + 1 : current - 1);
-    }, { passive: true });
-
-    document.querySelectorAll('[data-go]').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        var targetSection = Number(el.dataset.go);
-        var anchor = el.dataset.anchor || null;
-        if (targetSection === current && anchor) {
-          // Already on this section — just scroll to anchor
-          var anchorEl = document.getElementById(anchor);
-          if (anchorEl) lenis.scrollTo(anchorEl, { duration: 0.35 });
-        } else {
-          pendingAnchor = targetSection === 2 ? anchor : null;
-          goTo(targetSection);
-        }
-      });
-    });
   </script>
 
   <style>
-    
     html, body { background: #000; }
-    body { overflow: hidden; }
+    body { overflow-x: hidden; }
+
+    /* Initial hidden states for reveal classes */
     .m-reveal { opacity: 0; transform: translateY(36px); }
     .exp-reveal { opacity: 0; transform: translateY(40px); }
     .proj-reveal { opacity: 0; transform: translateY(40px); }
     .proj-phone { opacity: 0; transform: translateY(60px) scale(0.92); }
     .c-reveal { opacity: 0; transform: translateY(36px); }
+
     #scroll-hint { transition: opacity 0.5s ease; }
-    /* Hide native scrollbar on merged scroll section */
-    #s-scroll { scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-    #s-scroll::-webkit-scrollbar { display: none; }
+
+    /* Global scrollbar hide */
+    html { scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar { display: none; }
+
     /* Floating next-section arrow */
     #float-next-btn {
       position: fixed; bottom: 1.75rem; left: 50%; transform: translateX(-50%);
@@ -418,7 +279,6 @@ import ContactSection from "../components/ContactSection.astro";
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(6px); }
     }
-    footer { transition: opacity 0.4s ease; }
   </style>
 
 </Layout>
