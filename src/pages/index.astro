@@ -240,9 +240,13 @@ import ContactSection from "../components/ContactSection.astro";
     html, body { background: #000; }
     body { overflow-x: hidden; }
 
+    :root {
+      --hero-lift: clamp(1.5rem, 3vw, 2.75rem);
+    }
+
     #s-hero {
       z-index: 1;
-      transform-origin: center center;
+      transform-origin: center top;
       will-change: transform, opacity;
     }
     #s-mission,
