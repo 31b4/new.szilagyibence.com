@@ -62,52 +62,40 @@ import ContactSection from "../components/ContactSection.astro";
       stagger: 0.12, delay: 0.15,
     });
 
-    // ── Hero: scroll-out — scale down & fade as you scroll away ──
-    gsap.to('#s-hero', {
-      scale: 0.92,
-      opacity: 0,
-      ease: 'none',
+    // ── Hero exit + mission rise: hero stays pinned, scales back, fades away ──
+    // Mission is animated in the same scrubbed timeline so it rises over hero
+    // instead of waiting for hero to scroll off the page.
+    gsap.timeline({
       scrollTrigger: {
         trigger: '#s-hero',
         start: 'top top',
-        end: 'bottom top',
+        end: '+=100%',
         scrub: true,
+        pin: true,
+        pinSpacing: false,
       },
-    });
-
-    // ── Hero parallax: moon moves up, neptune moves down ──
-    gsap.to('.parallax-moon', {
-      y: -80,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#s-hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
-    });
-    gsap.to('.parallax-neptune', {
-      y: 80,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#s-hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
-    });
-
-    // ── Mission: slide in from below as it enters viewport ──
-    gsap.fromTo('#s-mission', { y: 60, opacity: 0 }, {
-      y: 0, opacity: 1,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#s-mission',
-        start: 'top 85%',
-        end: 'top 20%',
-        scrub: true,
-      },
-    });
+    })
+      .to('#s-hero', {
+        scale: 0.88,
+        opacity: 0,
+        ease: 'none',
+      }, 0)
+      .to('.parallax-moon', {
+        y: -80,
+        ease: 'none',
+      }, 0)
+      .to('.parallax-neptune', {
+        y: 80,
+        ease: 'none',
+      }, 0)
+      .fromTo('#s-mission', {
+        y: '18vh',
+        opacity: 0.18,
+      }, {
+        y: 0,
+        opacity: 1,
+        ease: 'none',
+      }, 0);
 
     // ── Mission orb subtle rise ──
     gsap.to('.mission-orb', {
@@ -251,6 +239,17 @@ import ContactSection from "../components/ContactSection.astro";
   <style>
     html, body { background: #000; }
     body { overflow-x: hidden; }
+
+    #s-hero {
+      z-index: 1;
+      transform-origin: center center;
+      will-change: transform, opacity;
+    }
+    #s-mission,
+    #s-scroll {
+      position: relative;
+      z-index: 2;
+    }
 
     /* Initial hidden states for reveal classes */
     .m-reveal { opacity: 0; transform: translateY(36px); }
