@@ -69,7 +69,7 @@ import ContactSection from "../components/ContactSection.astro";
       scrollTrigger: {
         trigger: '#s-hero',
         start: 'top top',
-        end: '+=100%',
+        end: '+=85%',
         scrub: true,
         pin: true,
         pinSpacing: false,
@@ -116,47 +116,74 @@ import ContactSection from "../components/ContactSection.astro";
         { opacity: 0, y: 36 },
         {
           opacity: 1, y: 0,
-          duration: 0.85,
+          duration: 0.55,
           ease: EASE_STR,
           scrollTrigger: {
             trigger: el,
-            start: 'top 88%',
-            end: 'top 55%',
+            start: 'top bottom',
+            end: 'top 95%',
             toggleActions: 'play none none reverse',
           },
-          delay: i * 0.08,
+          delay: i * 0.04,
         }
       );
     });
 
-    // ── Projects / Work / Contact: IntersectionObserver reveals ──
-    var REVEAL_EASE = 'cubic-bezier(0.76, 0, 0.24, 1)';
-    var revealObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (!entry.isIntersecting) return;
-        var el = entry.target;
-        var isPhone = el.classList.contains('proj-phone');
-        el.style.transition = 'opacity 0.85s ' + REVEAL_EASE + ', transform 0.85s ' + REVEAL_EASE;
-        el.style.opacity = '1';
-        el.style.transform = isPhone ? 'translateY(0) scale(1)' : 'translateY(0)';
-        revealObserver.unobserve(el);
-      });
-    }, { threshold: 0.1 });
+    // ── Projects / Work / Contact: same early reveal pattern as Mission ──
+    Array.from(document.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal, .proj-phone')).forEach(function(el, i) {
+      var isPhone = el.classList.contains('proj-phone');
 
-    document.querySelectorAll('.proj-reveal, .exp-reveal, .c-reveal').forEach(function(el) {
-      revealObserver.observe(el);
-    });
-    document.querySelectorAll('.proj-phone').forEach(function(el) {
-      revealObserver.observe(el);
+      gsap.fromTo(el,
+        {
+          opacity: 0,
+          y: isPhone ? 60 : 36,
+          scale: isPhone ? 0.92 : 1,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.55,
+          ease: EASE_STR,
+          scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'top 95%',
+            toggleActions: 'play none none reverse',
+          },
+          delay: i * 0.04,
+        }
+      );
     });
 
     // ── Header glass-active when past hero ──
     var siteHeader = document.querySelector('.site-header');
+    var siteFooter = document.querySelector('.site-footer');
+
+    function syncMobileFooterVisibility(isPastHero) {
+      if (!siteFooter) return;
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        siteFooter.classList.toggle('mobile-hidden', isPastHero);
+      } else {
+        siteFooter.classList.remove('mobile-hidden');
+      }
+    }
+
     ScrollTrigger.create({
       trigger: '#s-mission',
       start: 'top 50%',
-      onEnter: function() { if (siteHeader) siteHeader.classList.add('glass-active'); },
-      onLeaveBack: function() { if (siteHeader) siteHeader.classList.remove('glass-active'); },
+      onEnter: function() {
+        if (siteHeader) siteHeader.classList.add('glass-active');
+        syncMobileFooterVisibility(true);
+      },
+      onLeaveBack: function() {
+        if (siteHeader) siteHeader.classList.remove('glass-active');
+        syncMobileFooterVisibility(false);
+      },
+    });
+
+    window.addEventListener('resize', function() {
+      syncMobileFooterVisibility(Boolean(siteHeader && siteHeader.classList.contains('glass-active')));
     });
 
     // ── Scroll-hint: hide once user starts scrolling ──
